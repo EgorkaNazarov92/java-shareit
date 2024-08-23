@@ -2,10 +2,12 @@ package ru.practicum.shareit.user;
 
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.error.ExistException;
+import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class UserRepositoryImpl implements UserRepository {
@@ -36,7 +38,9 @@ public class UserRepositoryImpl implements UserRepository {
 
 	@Override
 	public User get(Long id) {
-		return users.get(id);
+		Optional<User> item = Optional.ofNullable(users.get(id));
+		if (item.isEmpty()) throw new NotFoundException("Нет пользователя c id = " + id);
+		return item.get();
 	}
 
 	@Override
