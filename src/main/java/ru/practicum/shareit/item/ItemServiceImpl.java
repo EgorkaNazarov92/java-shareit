@@ -11,7 +11,6 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,41 +29,41 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public ItemDto changeItem(Long userId, Long itemId, ItemDto itemDto) {
 		User user = getUser(userId);
-		Optional<Item> item = repository.change(itemId, ItemMapper.mapToItem(itemDto, user));
-		return ItemMapper.mapToItemDto(item.get());
+		Item item = repository.change(itemId, ItemMapper.mapToItem(itemDto, user));
+		return ItemMapper.mapToItemDto(item);
 	}
 
 	@Override
 	public ItemDto getItem(Long userId, Long itemId) {
-		User user = getUser(userId);
+		getUser(userId);
 		return ItemMapper.mapToItemDto(repository.getItem(itemId));
 	}
 
 	@Override
 	public List<ItemDto> getUserItem(Long userId) {
-		User user = getUser(userId);
+		getUser(userId);
 		return ItemMapper.mapToItemDto(repository.findByUserId(userId));
 	}
 
 	@Override
 	public List<ItemDto> searchItems(Long userId, String text) {
-		User user = getUser(userId);
+		getUser(userId);
 		if (text == null || text.isEmpty()) return new ArrayList<ItemDto>();
 		return ItemMapper.mapToItemDto(repository.search(text));
 	}
 
 	private User getUser(Long userId) {
-		Optional<User> user = userRepository.get(userId);
-		if (user.isEmpty()) throw new NotFoundException("Пользователя с id = " + userId.toString() + " не существует");
-		return user.get();
+		User user = userRepository.get(userId);
+		if (user == null) throw new NotFoundException("Пользователя с id = " + userId.toString() + " не существует");
+		return user;
 	}
 
 	private void validateItem(ItemDto itemDto) {
 		if (itemDto.getName() == null || itemDto.getName().isEmpty()) {
-			throw new ValidationException("Имя не может быть пустым и содержать пробелы");
+			throw new ValidationException("Имя не может быть пустым");
 		}
 		if (itemDto.getDescription() == null || itemDto.getDescription().isEmpty()) {
-			throw new ValidationException("Description не может быть пустым и содержать пробелы");
+			throw new ValidationException("Description не может быть пустым");
 		}
 	}
 }
