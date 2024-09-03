@@ -16,7 +16,6 @@ import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -63,7 +62,6 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public List<BookingDtoResponse> getBookings(Long userId, String state) {
 		getUser(userId);
-		List<Booking> bookings = new ArrayList<>();
 		Sort sort = Sort.by(Sort.Direction.ASC, "start");
 		if (state == null || state.isEmpty()) state = "ALL";
 		LocalDateTime now = LocalDateTime.now();
@@ -102,7 +100,6 @@ public class BookingServiceImpl implements BookingService {
 		getUser(userId);
 		List<Item> items = itemRepository.findByUserId(userId);
 		if (items.isEmpty()) throw new NotFoundException("У пользователя с id = " + userId + "нет вещей");
-		List<Booking> bookings = new ArrayList<>();
 		Sort sort = Sort.by(Sort.Direction.ASC, "start");
 		if (state == null || state.isEmpty()) state = "ALL";
 		LocalDateTime now = LocalDateTime.now();
