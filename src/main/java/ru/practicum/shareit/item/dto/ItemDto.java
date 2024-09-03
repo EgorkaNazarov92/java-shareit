@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.time.LocalDateTime;
+import java.util.Set;
+
 
 @Data
 @NoArgsConstructor
@@ -15,4 +18,7 @@ public class ItemDto {
 	private String description;
 	@NonNull
 	private Boolean available;
+	private LocalDateTime lastBooking;
+	private LocalDateTime nextBooking;
+	private Set<String> comments;
 }

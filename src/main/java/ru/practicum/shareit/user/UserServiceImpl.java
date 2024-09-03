@@ -3,15 +3,18 @@ package ru.practicum.shareit.user;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 	private final UserRepository repository;
 
 	@Override
+	@Transactional
 	public UserDto saveUser(UserDto userDto) {
 		validateUser(userDto);
 		User user = UserMapper.mapToUser(userDto);
@@ -19,19 +22,24 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public UserDto changeUser(Long userId, UserDto userDto) {
 		User user = UserMapper.mapToUser(userDto);
-		return UserMapper.mapToUserDto(repository.change(userId, user));
+		User gboUser = repository.getById(userId);
+		if (user.getName() != null) gboUser.setName(user.getName());
+		if (user.getEmail() != null) gboUser.setEmail(user.getEmail());
+		return UserMapper.mapToUserDto(repository.save(gboUser));
 	}
 
 	@Override
 	public UserDto getUser(Long id) {
-		return UserMapper.mapToUserDto(repository.get(id));
+		return UserMapper.mapToUserDto(repository.getById(id));
 	}
 
 	@Override
+	@Transactional
 	public void deleteUser(Long id) {
-		repository.delete(id);
+		repository.deleteById(id);
 	}
 
 	private void validateUser(UserDto user) {
