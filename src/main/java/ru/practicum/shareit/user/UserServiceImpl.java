@@ -4,6 +4,7 @@ import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.error.ExistException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
@@ -26,6 +27,8 @@ public class UserServiceImpl implements UserService {
 	public UserDto changeUser(Long userId, UserDto userDto) {
 		User user = UserMapper.mapToUser(userDto);
 		User gboUser = repository.getById(userId);
+		if (!gboUser.getEmail().equals(user.getEmail()) && repository.getByEmail(userDto.getEmail()).isPresent())
+			throw new ExistException("Такой email уже есть");
 		if (user.getName() != null) gboUser.setName(user.getName());
 		if (user.getEmail() != null) gboUser.setEmail(user.getEmail());
 		return UserMapper.mapToUserDto(repository.save(gboUser));
@@ -49,5 +52,7 @@ public class UserServiceImpl implements UserService {
 		if (user.getEmail() == null || user.getEmail().isEmpty()) {
 			throw new ValidationException("email не может быть пустым");
 		}
+		if (repository.getByEmail(user.getEmail()).isPresent())
+			throw new ExistException("Такой email уже есть");
 	}
 }
