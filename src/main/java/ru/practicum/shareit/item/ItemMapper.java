@@ -6,7 +6,9 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -17,23 +19,39 @@ public class ItemMapper {
 		item.setName(itemDto.getName());
 		item.setDescription(itemDto.getDescription());
 		item.setAvailable(itemDto.getAvailable());
-		item.setOwner(user);
+		item.setUser(user);
 		return item;
 	}
 
-	public static ItemDto mapToItemDto(Item item) {
+	public static ItemDto mapToItemDto(Item item, Long userId) {
 		return new ItemDto(
 				item.getId(),
 				item.getName(),
 				item.getDescription(),
-				item.getAvailable()
+				item.getAvailable(),
+				item.getUser().getId().equals(userId) ?
+						item.getBookingEndDates()
+								.stream()
+								.filter(localDateTime -> localDateTime.isBefore(LocalDateTime.now()))
+								.sorted(Comparator.reverseOrder())
+								.findFirst().orElse(null)
+						: null,
+
+				item.getUser().getId().equals(userId) ?
+						item.getBookingStartDates()
+								.stream()
+								.filter(localDateTime -> localDateTime.isAfter(LocalDateTime.now()))
+								.sorted()
+								.findFirst().orElse(null)
+						: null,
+				item.getComments()
 		);
 	}
 
-	public static List<ItemDto> mapToItemDto(Iterable<Item> items) {
+	public static List<ItemDto> mapToItemDto(Iterable<Item> items, Long userId) {
 		List<ItemDto> dtos = new ArrayList<>();
 		for (Item item : items) {
-			dtos.add(mapToItemDto(item));
+			dtos.add(mapToItemDto(item, userId));
 		}
 		return dtos;
 	}

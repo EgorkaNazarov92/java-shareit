@@ -1,5 +1,6 @@
 package ru.practicum.shareit.error;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,9 +11,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ErrorHandler {
 
-	@ExceptionHandler
+	@ExceptionHandler({EntityNotFoundException.class, NotFoundException.class})
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public ErrorResponse handleNotFound(final NotFoundException e) {
+	public ErrorResponse handleNotFound(final Exception e) {
 		return new ErrorResponse(e.getMessage(), "Not Found");
 	}
 
@@ -26,6 +27,12 @@ public class ErrorHandler {
 	@ResponseStatus(HttpStatus.CONFLICT)
 	public ErrorResponse handleParameterConflict(final Exception e) {
 		return new ErrorResponse(e.getMessage(), "Ошибка уникальности");
+	}
+
+	@ExceptionHandler({ForbiddenException.class})
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	public ErrorResponse handleParameterForbidden(final Exception e) {
+		return new ErrorResponse(e.getMessage(), "Ошибка прав.");
 	}
 
 	@ExceptionHandler
