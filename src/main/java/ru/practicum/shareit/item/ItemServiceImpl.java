@@ -53,7 +53,8 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public ItemDto getItem(Long userId, Long itemId) {
 		getUser(userId);
-		return ItemMapper.mapToItemDto(repository.getById(itemId), userId);
+		Item item = getItem(itemId);
+		return ItemMapper.mapToItemDto(item, userId);
 	}
 
 	@Override

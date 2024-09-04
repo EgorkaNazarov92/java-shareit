@@ -55,7 +55,7 @@ public class BookingServiceImpl implements BookingService {
 		Booking booking = getBooking(bookingId);
 		Item item = booking.getItem();
 		if (!Arrays.asList(new Long[]{item.getUser().getId(), booking.getBooker().getId()}).contains(userId))
-			throw new ForbiddenException("Только владелец вещи или автор бронирования, может апрувить запрос");
+			throw new ForbiddenException("Только владелец вещи или автор бронирования, смотреть запрос");
 		return BookingMapper.mapToBookingDto(booking);
 	}
 
