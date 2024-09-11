@@ -1,6 +1,5 @@
 package ru.practicum.shareit.error;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ErrorHandler {
 
-	@ExceptionHandler({EntityNotFoundException.class, NotFoundException.class})
+	@ExceptionHandler({NotFoundException.class})
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ErrorResponse handleNotFound(final Exception e) {
 		return new ErrorResponse(e.getMessage(), "Not Found");

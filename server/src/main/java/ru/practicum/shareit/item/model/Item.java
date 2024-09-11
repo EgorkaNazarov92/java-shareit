@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
@@ -41,6 +42,10 @@ public class Item {
 	@CollectionTable(name = "comments", joinColumns = @JoinColumn(name = "item_id"))
 	@Column(name = "text")
 	private Set<String> comments = new HashSet<>();
+
+	@ManyToOne
+	@JoinColumn(name = "request_id")
+	private Request request;
 
 	@Override
 	public boolean equals(Object o) {

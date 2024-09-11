@@ -13,6 +13,8 @@ import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.RequestRepository;
+import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
@@ -29,13 +31,16 @@ public class ItemServiceImpl implements ItemService {
 	private final UserRepository userRepository;
 	private final BookingRepository bookingRepository;
 	private final CommentRepository commentRepository;
+	private final RequestRepository requestRepository;
 
 	@Override
 	@Transactional
 	public ItemDto addNewItem(Long userId, ItemDto itemDto) {
 		validateItem(itemDto);
 		User user = getUser(userId);
-		Item item = repository.save(ItemMapper.mapToItem(itemDto, user));
+		Request request = null;
+		if (itemDto.getRequestId() != null) request = getRequest(itemDto.getRequestId());
+		Item item = repository.save(ItemMapper.mapToItem(itemDto, user, request));
 		return ItemMapper.mapToItemDto(item, userId);
 	}
 
@@ -91,6 +96,12 @@ public class ItemServiceImpl implements ItemService {
 		Optional<Item> item = repository.findById(itemId);
 		if (item.isEmpty()) throw new NotFoundException("Вещи с id = " + itemId + " не существует");
 		return item.get();
+	}
+
+	private Request getRequest(Long requestId) {
+		Optional<Request> request = requestRepository.findById(requestId);
+		if (request.isEmpty()) throw new NotFoundException("Запроса с id = " + requestId + " не существует");
+		return request.get();
 	}
 
 	private void checkBooking(Long userId, Long itemId) {

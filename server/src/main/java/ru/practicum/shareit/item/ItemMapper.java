@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
@@ -13,13 +14,14 @@ import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemMapper {
-	public static Item mapToItem(ItemDto itemDto, User user) {
+	public static Item mapToItem(ItemDto itemDto, User user, Request request) {
 		Item item = new Item();
 		item.setId(itemDto.getId());
 		item.setName(itemDto.getName());
 		item.setDescription(itemDto.getDescription());
 		item.setAvailable(itemDto.getAvailable());
 		item.setUser(user);
+		item.setRequest(request);
 		return item;
 	}
 
@@ -44,7 +46,8 @@ public class ItemMapper {
 								.sorted()
 								.findFirst().orElse(null)
 						: null,
-				item.getComments()
+				item.getComments(),
+				item.getRequest() == null ? null : item.getRequest().getId()
 		);
 	}
 
