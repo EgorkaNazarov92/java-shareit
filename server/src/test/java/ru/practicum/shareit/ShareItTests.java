@@ -810,10 +810,10 @@ public class ShareItTests {
 		bookingController.add(bookerId, bookingItem1Future);
 		Long bookingId = userDto.getId();
 		bookingController.approve(ownerId, bookingId, true);
-		CommentDto CommentDto = commentToItem1First;
+		CommentDto commentDto = commentToItem1First;
 
 		assertThrows(Exception.class,
-				() -> itemController.addComment(bookerId, itemId, CommentDto),
+				() -> itemController.addComment(bookerId, itemId, commentDto),
 				"Не выброшено исключение Exception.");
 
 	}
