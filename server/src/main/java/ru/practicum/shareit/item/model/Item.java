@@ -1,9 +1,10 @@
 package ru.practicum.shareit.item.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.model.User;
 
@@ -13,9 +14,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "items")
-@Getter
-@Setter
-@ToString
+@Data
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Item {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

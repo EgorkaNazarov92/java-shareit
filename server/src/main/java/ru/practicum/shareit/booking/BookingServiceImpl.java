@@ -34,6 +34,7 @@ public class BookingServiceImpl implements BookingService {
 		validateBooking(bookingDtoRequest);
 		User user = getUser(userId);
 		Item item = getItem(bookingDtoRequest.getItemId());
+		if (item.getUser().getId().equals(userId)) throw new ForbiddenException("Нельзя забронить свою вещь.");
 		bookingDtoRequest.setStatus(BookingStatus.WAITING);
 		Booking booking = bookingRepository.save(BookingMapper.mapToBooking(bookingDtoRequest, user, item));
 		return BookingMapper.mapToBookingDto(booking);

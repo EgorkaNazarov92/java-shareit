@@ -39,9 +39,10 @@ class BookingServiceImplTest {
 	@Test
 	void addNewBooking() {
 		UserDto userDto = userService.saveUser(makeUserDto("some2@email.com", "Пётр"));
+		UserDto userDto2 = userService.saveUser(makeUserDto("some22@email.com", "Вася"));
 		BookingDtoRequest bookingDto = makeBookingDtoRequest(userDto);
 
-		BookingDtoResponse result = bookingService.addNewBooking(userDto.getId(), bookingDto);
+		BookingDtoResponse result = bookingService.addNewBooking(userDto2.getId(), bookingDto);
 
 		assertThat(result.getId(), notNullValue());
 		assertThat(result.getStatus(), equalTo(BookingStatus.WAITING));
@@ -51,9 +52,10 @@ class BookingServiceImplTest {
 	@Test
 	void approveBooking() {
 		UserDto userDto = userService.saveUser(makeUserDto("some2@email.com", "Пётр"));
+		UserDto userDto2 = userService.saveUser(makeUserDto("some22@email.com", "Вася"));
 		BookingDtoRequest bookingDto = makeBookingDtoRequest(userDto);
 
-		BookingDtoResponse result = bookingService.addNewBooking(userDto.getId(), bookingDto);
+		BookingDtoResponse result = bookingService.addNewBooking(userDto2.getId(), bookingDto);
 
 		assertThat(result.getStatus(), equalTo(BookingStatus.WAITING));
 		result = bookingService.approveBooking(userDto.getId(), result.getId(), true);
@@ -63,9 +65,10 @@ class BookingServiceImplTest {
 	@Test
 	void getBooking() {
 		UserDto userDto = userService.saveUser(makeUserDto("some2@email.com", "Пётр"));
+		UserDto userDto2 = userService.saveUser(makeUserDto("some22@email.com", "Вася"));
 		BookingDtoRequest bookingDto = makeBookingDtoRequest(userDto);
 
-		BookingDtoResponse result = bookingService.addNewBooking(userDto.getId(), bookingDto);
+		BookingDtoResponse result = bookingService.addNewBooking(userDto2.getId(), bookingDto);
 
 		BookingDtoResponse getResult = bookingService.getBooking(userDto.getId(), result.getId());
 		assertThat(result, equalTo(getResult));
@@ -75,19 +78,21 @@ class BookingServiceImplTest {
 	@Test
 	void getBookings() {
 		UserDto userDto = userService.saveUser(makeUserDto("some2@email.com", "Пётр"));
+		UserDto userDto2 = userService.saveUser(makeUserDto("some22@email.com", "Вася"));
 		BookingDtoRequest bookingDto = makeBookingDtoRequest(userDto);
 
-		bookingService.addNewBooking(userDto.getId(), bookingDto);
-		List<BookingDtoResponse> bookingDtoResponses = bookingService.getBookings(userDto.getId(), "ALL");
+		bookingService.addNewBooking(userDto2.getId(), bookingDto);
+		List<BookingDtoResponse> bookingDtoResponses = bookingService.getBookings(userDto2.getId(), "ALL");
 		assertTrue(bookingDtoResponses.size() > 0);
 	}
 
 	@Test
 	void getOwnerBookings() {
 		UserDto userDto = userService.saveUser(makeUserDto("some2@email.com", "Пётр"));
+		UserDto userDto2 = userService.saveUser(makeUserDto("some22@email.com", "Вася"));
 		BookingDtoRequest bookingDto = makeBookingDtoRequest(userDto);
 
-		bookingService.addNewBooking(userDto.getId(), bookingDto);
+		bookingService.addNewBooking(userDto2.getId(), bookingDto);
 		List<BookingDtoResponse> bookingDtoResponses = bookingService.getOwnerBookings(userDto.getId(), "ALL");
 		assertTrue(bookingDtoResponses.size() == 1);
 	}

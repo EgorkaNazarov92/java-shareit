@@ -10,6 +10,7 @@ import ru.practicum.shareit.comment.CommentMapper;
 import ru.practicum.shareit.comment.CommentRepository;
 import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.comment.model.Comment;
+import ru.practicum.shareit.error.ForbiddenException;
 import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
@@ -49,6 +50,8 @@ public class ItemServiceImpl implements ItemService {
 	public ItemDto changeItem(Long userId, Long itemId, ItemDto itemDto) {
 		User user = getUser(userId);
 		Item item = repository.getById(itemId);
+		if (!item.getUser().getId().equals(userId))
+			throw new ForbiddenException("Только владелец может изменять вешью");
 		if (itemDto.getName() != null) item.setName(itemDto.getName());
 		if (itemDto.getDescription() != null) item.setDescription(itemDto.getDescription());
 		if (itemDto.getAvailable() != null) item.setAvailable(itemDto.getAvailable());

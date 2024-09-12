@@ -50,7 +50,7 @@ class ItemControllerTest {
 				.standaloneSetup(controller)
 				.build();
 
-		user = new User();
+		user = User.builder().build();
 		user.setId(1L);
 		user.setName("John");
 		user.setEmail("ohn.doe@mail.com");

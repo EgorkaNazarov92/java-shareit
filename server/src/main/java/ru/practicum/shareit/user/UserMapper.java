@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
 	public static User mapToUser(UserDto userDto) {
-		User user = new User();
+		User user = User.builder().build();
 		user.setId(userDto.getId());
 		user.setName(userDto.getName());
 		user.setEmail(userDto.getEmail());

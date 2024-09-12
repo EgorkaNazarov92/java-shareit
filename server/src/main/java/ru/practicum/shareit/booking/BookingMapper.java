@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookingMapper {
 	public static Booking mapToBooking(BookingDtoRequest bookingDtoRequest, User user, Item item) {
-		Booking booking = new Booking();
+		Booking booking = Booking.builder().build();
 		booking.setId(bookingDtoRequest.getId());
 		booking.setItem(item);
 		booking.setStart(bookingDtoRequest.getStart());

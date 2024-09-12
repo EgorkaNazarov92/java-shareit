@@ -1,9 +1,10 @@
 package ru.practicum.shareit.comment.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -12,9 +13,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comments")
-@Getter
-@Setter
-@ToString
+@Data
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

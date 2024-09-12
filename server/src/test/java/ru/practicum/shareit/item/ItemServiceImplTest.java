@@ -106,6 +106,7 @@ class ItemServiceImplTest {
 	@Test
 	void addNewComment() throws InterruptedException {
 		UserDto userDto = userService.saveUser(makeUserDto("some2@email.com", "Пётр"));
+		UserDto userDto2 = userService.saveUser(makeUserDto("some22@email.com", "Вася"));
 		ItemDto itemDto = makeItemDto("Пила", "ручная");
 
 		ItemDto result = itemService.addNewItem(userDto.getId(), itemDto);
@@ -115,13 +116,13 @@ class ItemServiceImplTest {
 		dto.setStart(LocalDateTime.now().plusSeconds(1));
 		dto.setEnd(LocalDateTime.now().plusSeconds(2));
 
-		bookingService.addNewBooking(userDto.getId(), dto);
-		Thread.sleep(3000);
+		bookingService.addNewBooking(userDto2.getId(), dto);
+		Thread.sleep(4000);
 
 		CommentDto commentDto = new CommentDto();
-		commentDto.setAuthorName(userDto.getName());
+		commentDto.setAuthorName(userDto2.getName());
 		commentDto.setText("Отличная пила");
-		CommentDto resultComment = itemService.addNewComment(userDto.getId(), result.getId(), commentDto);
+		CommentDto resultComment = itemService.addNewComment(userDto2.getId(), result.getId(), commentDto);
 
 		assertThat(resultComment.getId(), notNullValue());
 		assertThat(resultComment.getText(), equalTo(commentDto.getText()));

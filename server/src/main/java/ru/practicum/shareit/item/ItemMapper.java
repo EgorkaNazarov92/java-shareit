@@ -10,12 +10,13 @@ import ru.practicum.shareit.user.model.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemMapper {
 	public static Item mapToItem(ItemDto itemDto, User user, Request request) {
-		Item item = new Item();
+		Item item = Item.builder().build();
 		item.setId(itemDto.getId());
 		item.setName(itemDto.getName());
 		item.setDescription(itemDto.getDescription());
@@ -31,7 +32,7 @@ public class ItemMapper {
 				item.getName(),
 				item.getDescription(),
 				item.getAvailable(),
-				item.getUser().getId().equals(userId) ?
+				item.getUser().getId().equals(userId) && item.getBookingEndDates() != null ?
 						item.getBookingEndDates()
 								.stream()
 								.filter(localDateTime -> localDateTime.isBefore(LocalDateTime.now()))
@@ -39,14 +40,14 @@ public class ItemMapper {
 								.findFirst().orElse(null)
 						: null,
 
-				item.getUser().getId().equals(userId) ?
+				item.getUser().getId().equals(userId) && item.getBookingStartDates() != null ?
 						item.getBookingStartDates()
 								.stream()
 								.filter(localDateTime -> localDateTime.isAfter(LocalDateTime.now()))
 								.sorted()
 								.findFirst().orElse(null)
 						: null,
-				item.getComments(),
+				item.getComments() == null ? new HashSet<String>() : item.getComments(),
 				item.getRequest() == null ? null : item.getRequest().getId()
 		);
 	}
