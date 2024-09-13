@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.error.NotFoundException;
-import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.request.dto.RequestDtoRequest;
 import ru.practicum.shareit.request.dto.RequestDtoResponse;
 import ru.practicum.shareit.request.model.Request;
@@ -20,7 +19,6 @@ import java.util.Optional;
 public class RequestServiceImpl implements RequestService {
 	private final RequestRepository requestRepository;
 	private final UserRepository userRepository;
-	private final ItemRepository itemRepository;
 
 	@Override
 	@Transactional

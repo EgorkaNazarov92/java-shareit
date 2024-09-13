@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -25,6 +26,7 @@ public class UserClient extends BaseClient {
 	}
 
 	public ResponseEntity<Object> saveUser(UserRequestDto user) {
+		validateUser(user);
 		return post("", user);
 	}
 
@@ -38,5 +40,14 @@ public class UserClient extends BaseClient {
 
 	public ResponseEntity<Object> deleteUser(Long userId) {
 		return delete("/" + userId);
+	}
+
+	private void validateUser(UserRequestDto user) {
+		if (user.getName() == null || user.getName().isEmpty()) {
+			throw new ValidationException("Имя не может быть пустым");
+		}
+		if (user.getEmail() == null || user.getEmail().isEmpty()) {
+			throw new ValidationException("email не может быть пустым");
+		}
 	}
 }

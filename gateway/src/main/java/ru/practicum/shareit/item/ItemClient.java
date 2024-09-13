@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -28,6 +29,7 @@ public class ItemClient extends BaseClient {
 	}
 
 	public ResponseEntity<Object> addNewItem(Long userId, ItemRequestDto item) {
+		validateItem(item);
 		return post("", userId, item);
 	}
 
@@ -50,5 +52,14 @@ public class ItemClient extends BaseClient {
 
 	public ResponseEntity<Object> addNewComment(Long userId, Long itemId, CommentRequestDto commentDto) {
 		return post("/" + itemId + "/comment", userId, commentDto);
+	}
+
+	private void validateItem(ItemRequestDto itemDto) {
+		if (itemDto.getName() == null || itemDto.getName().isEmpty()) {
+			throw new ValidationException("Имя не может быть пустым");
+		}
+		if (itemDto.getDescription() == null || itemDto.getDescription().isEmpty()) {
+			throw new ValidationException("Description не может быть пустым");
+		}
 	}
 }

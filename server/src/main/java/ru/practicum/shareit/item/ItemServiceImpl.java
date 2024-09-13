@@ -37,7 +37,6 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	@Transactional
 	public ItemDto addNewItem(Long userId, ItemDto itemDto) {
-		validateItem(itemDto);
 		User user = getUser(userId);
 		Request request = null;
 		if (itemDto.getRequestId() != null) request = getRequest(itemDto.getRequestId());
@@ -113,14 +112,5 @@ public class ItemServiceImpl implements ItemService {
 				+ " не брал вещь с id = " + itemId);
 		if (!booking.get().getEnd().isBefore(LocalDateTime.now()))
 			throw new ValidationException("Пользователь еще не брал вещь");
-	}
-
-	private void validateItem(ItemDto itemDto) {
-		if (itemDto.getName() == null || itemDto.getName().isEmpty()) {
-			throw new ValidationException("Имя не может быть пустым");
-		}
-		if (itemDto.getDescription() == null || itemDto.getDescription().isEmpty()) {
-			throw new ValidationException("Description не может быть пустым");
-		}
 	}
 }

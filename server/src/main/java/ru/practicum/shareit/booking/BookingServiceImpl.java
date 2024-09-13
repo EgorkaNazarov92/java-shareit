@@ -31,7 +31,6 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	@Transactional
 	public BookingDtoResponse addNewBooking(Long userId, BookingDtoRequest bookingDtoRequest) {
-		validateBooking(bookingDtoRequest);
 		User user = getUser(userId);
 		Item item = getItem(bookingDtoRequest.getItemId());
 		if (item.getUser().getId().equals(userId)) throw new ForbiddenException("Нельзя забронить свою вещь.");
@@ -132,25 +131,6 @@ public class BookingServiceImpl implements BookingService {
 			default:
 				throw new ValidationException("Нет такого фильтра, state = " + state);
 		}
-	}
-
-	private void validateBooking(BookingDtoRequest bookingDtoRequest) {
-		LocalDateTime start = bookingDtoRequest.getStart();
-		LocalDateTime end = bookingDtoRequest.getEnd();
-		LocalDateTime now = LocalDateTime.now();
-		if (end.isBefore(now)) {
-			throw new ValidationException("Время окнчания бронирования не может быть в прошлом, end = "
-					+ bookingDtoRequest.getEnd());
-		}
-		if (start.isBefore(now)) {
-			throw new ValidationException("Время начала бронирования не может быть в прошлом, start = "
-					+ bookingDtoRequest.getStart());
-		}
-		if (end.equals(start)) {
-			throw new ValidationException("Время окончания бронирования end = " +
-					end + " не может быть равно start = " + start);
-		}
-
 	}
 
 	private User getUser(Long userId) {

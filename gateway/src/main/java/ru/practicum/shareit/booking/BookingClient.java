@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking;
 
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -11,6 +12,7 @@ import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingState;
 import ru.practicum.shareit.client.BaseClient;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
@@ -38,6 +40,7 @@ public class BookingClient extends BaseClient {
 
 
 	public ResponseEntity<Object> bookItem(long userId, BookItemRequestDto requestDto) {
+		validateBooking(requestDto);
 		return post("", userId, requestDto);
 	}
 
@@ -54,5 +57,25 @@ public class BookingClient extends BaseClient {
 				"state", state.name()
 		);
 		return get("/owner?state={state}", userId, parameters);
+	}
+
+
+	private void validateBooking(BookItemRequestDto bookingDtoRequest) {
+		LocalDateTime start = bookingDtoRequest.getStart();
+		LocalDateTime end = bookingDtoRequest.getEnd();
+		LocalDateTime now = LocalDateTime.now();
+		if (end.isBefore(now)) {
+			throw new ValidationException("Время окнчания бронирования не может быть в прошлом, end = "
+					+ bookingDtoRequest.getEnd());
+		}
+		if (start.isBefore(now)) {
+			throw new ValidationException("Время начала бронирования не может быть в прошлом, start = "
+					+ bookingDtoRequest.getStart());
+		}
+		if (end.equals(start)) {
+			throw new ValidationException("Время окончания бронирования end = " +
+					end + " не может быть равно start = " + start);
+		}
+
 	}
 }
